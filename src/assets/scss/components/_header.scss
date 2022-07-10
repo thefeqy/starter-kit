@@ -1,5 +1,7 @@
+@use '../helpers' as helpers;
+
 body {
-    background-color: $green;
+    background-color: helpers.$green;
 }
 
 a {
