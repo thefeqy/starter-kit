@@ -11,6 +11,8 @@ import imagemin from 'gulp-imagemin';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 import browserSync from 'browser-sync';
+import autoprefixer from 'gulp-autoprefixer';
+import rename from 'gulp-rename';
 
 const sass = gulpSass(sassLib);
 const sync = browserSync.create();
@@ -47,8 +49,11 @@ gulp.task('buildStyles', () => {
 		.src(paths.styles.src)
 		.pipe(gulpIf(!PRODUCTION, sourceMaps.init()))
 		.pipe(sass().on('error', sass.logError))
+		.pipe(autoprefixer())
 		.pipe(gulpIf(PRODUCTION, cleanCss({ compatibility: 'ie8' })))
-		.pipe(gulpIf(!PRODUCTION, sourceMaps.write()))
+		.pipe(gulpIf(!PRODUCTION, sourceMaps.write('./')))
+		.pipe(gulp.dest(paths.styles.dest))
+		.pipe(rename({ suffix: '.min' }))
 		.pipe(gulp.dest(paths.styles.dest))
 		.pipe(sync.stream());
 });
