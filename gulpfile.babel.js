@@ -77,28 +77,33 @@ gulp.task('optimizeImages', () => {
 		.pipe(sync.stream());
 });
 
-// Dev
-gulp.task('dev', () => {
-	sync.init({
-		server: {
-			baseDir: './build/',
-		},
-	});
-
-	gulp.watch('src/**/*.html', gulp.series('copyHTML')).on(
-		'change',
-		sync.reload
-	);
-	gulp.watch('src/assets/scss/**/*.scss', gulp.series('buildStyles'));
-	gulp.watch('src/assets/js/**/*.js', gulp.series('concatScripts'));
-	gulp.watch('src/assets/images/*', gulp.series('optimizeImages')).on(
-		'change',
-		sync.reload
-	);
-});
-
 // Build Script - "npm run build"
 gulp.task(
 	'default',
 	gulp.series('copyHTML', 'buildStyles', 'concatScripts', 'optimizeImages')
+);
+
+// Development Mode
+gulp.task(
+	'dev',
+	gulp.series('default', () => {
+		sync.init({
+			server: {
+				baseDir: './build/',
+			},
+		});
+
+		// gulp.series('copyHTML', 'buildStyles', 'concatScripts', 'optimizeImages');
+
+		gulp.watch('src/**/*.html', gulp.series('copyHTML')).on(
+			'change',
+			sync.reload
+		);
+		gulp.watch('src/assets/scss/**/*.scss', gulp.series('buildStyles'));
+		gulp.watch('src/assets/js/**/*.js', gulp.series('concatScripts'));
+		gulp.watch('src/assets/images/*', gulp.series('optimizeImages')).on(
+			'change',
+			sync.reload
+		);
+	})
 );

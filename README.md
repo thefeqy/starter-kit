@@ -2,16 +2,16 @@
 
 ##### First, install the project required modules by running the following command:
 ```
-    npm install
+npm install
 ```
-
 ##### to run the development mode, just run the following command:
 ```
-    npm run dev
+npm run dev
 ```
+
 ##### to build the production website, just run the following command:
 ```
-    npm run build
+npm run build
 ```
 
 By

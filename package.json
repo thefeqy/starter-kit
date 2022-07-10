@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "gulp dev",
-    "build": "gulp",
-    "build:prod": "gulp --prod"
+    "build": "gulp --prod"
   },
   "keywords": [],
   "author": "osclancer",
