@@ -5,8 +5,7 @@ var gulpSass = require('gulp-sass');
 var gulpIf = require('gulp-if');
 var sourceMaps = require('gulp-sourcemaps');
 var cleanCss = require('gulp-clean-css');
-// var imagemin = require('gulp-imagemin');
-var concat = require('gulp-concat');
+var imagemin = require('gulp-imagemin');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
@@ -91,7 +90,7 @@ gulp.task('optimizeImages', function () {
 	return (
 		gulp
 			.src(paths.images.src)
-			// .pipe(gulpIf(PRODUCTION, imagemin()))
+			.pipe(gulpIf(PRODUCTION, imagemin()))
 			.pipe(gulp.dest(paths.images.dest))
 			.pipe(sync.stream())
 	);
