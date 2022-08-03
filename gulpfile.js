@@ -23,15 +23,15 @@ var PRODUCTION = yargs(process.argv.slice(2)).argv.prod;
 var paths = {
 	html: {
 		src: 'src/**/*.html',
-		dest: 'build/',
+		dest: 'dist/',
 	},
 	styles: {
 		src: 'src/assets/scss/*.scss',
-		dest: 'build/assets/css',
+		dest: 'dist/assets/css',
 	},
 	scripts: {
 		dir: 'src/assets/js/',
-		dest: 'build/assets/js',
+		dest: 'dist/assets/js',
 		files: [
 			{
 				src: 'index.js',
@@ -40,14 +40,9 @@ var paths = {
 	},
 	images: {
 		src: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg}',
-		dest: 'build/assets/images',
+		dest: 'dist/assets/images',
 	},
 };
-
-// Copy HTML files
-gulp.task('copyHTML', function () {
-	return gulp.src(paths.html.src).pipe(gulp.dest(paths.html.dest));
-});
 
 // Building and minifying styles
 gulp.task('buildStyles', function () {
@@ -78,7 +73,7 @@ gulp.task('scripts', function (done) {
 			.pipe(sourceMaps.init({ loadMaps: true }))
 			.pipe(uglify())
 			.pipe(sourceMaps.write('./'))
-			.pipe(gulp.dest('build/assets/js'))
+			.pipe(gulp.dest('dist/assets/js'))
 			.pipe(sync.stream());
 	});
 
@@ -99,7 +94,7 @@ gulp.task('optimizeImages', function () {
 // Build Script - "npm run build"
 gulp.task(
 	'default',
-	gulp.series('copyHTML', 'buildStyles', 'scripts', 'optimizeImages')
+	gulp.series('buildStyles', 'scripts', 'optimizeImages')
 );
 
 // Development Mode
@@ -108,16 +103,10 @@ gulp.task(
 	gulp.series('default', function () {
 		sync.init({
 			server: {
-				baseDir: './build/',
+				baseDir: './',
 			},
 		});
 
-		// gulp.series('copyHTML', 'buildStyles', 'scripts', 'optimizeImages');
-
-		gulp.watch('src/**/*.html', gulp.series('copyHTML')).on(
-			'change',
-			sync.reload
-		);
 		gulp.watch('src/assets/scss/**/*.scss', gulp.series('buildStyles'));
 		gulp.watch('src/assets/js/**/*.js', gulp.series('scripts'));
 		gulp.watch('src/assets/images/*', gulp.series('optimizeImages')).on(
