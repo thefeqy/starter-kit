@@ -1,34 +1,41 @@
 {
-  "name": "starter-kit",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "gulp dev",
-    "build": "gulp --prod"
-  },
-  "keywords": [],
-  "author": "osclancer",
-  "license": "ISC",
-  "browserslist": [
-    "last 2 versions"
-  ],
-  "devDependencies": {
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "browser-sync": "^2.27.10",
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-if": "^3.0.0",
-    "gulp-imagemin": "^8.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-sass": "^5.1.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-uglify": "^3.0.2",
-    "sass": "^1.53.0",
-    "yargs": "^17.5.1"
-  }
+	"name": "starter-kit",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "gulp dev",
+		"build": "gulp --prod"
+	},
+	"keywords": [],
+	"author": "osclancer",
+	"license": "ISC",
+	"browserslist": [
+		"last 2 versions"
+	],
+	"devDependencies": {
+		"@babel/core": "^7.18.10",
+		"@babel/preset-env": "^7.18.10",
+		"babel-core": "^6.26.3",
+		"babel-preset": "^1.1.7",
+		"babel-preset-env": "^1.7.0",
+		"babel-register": "^6.26.0",
+		"babelify": "^10.0.0",
+		"browser-sync": "^2.27.10",
+		"browserify": "^17.0.0",
+		"gulp": "^4.0.2",
+		"gulp-autoprefixer": "^8.0.0",
+		"gulp-clean-css": "^4.3.0",
+		"gulp-concat": "^2.6.1",
+		"gulp-if": "^3.0.0",
+		"gulp-imagemin": "^8.0.0",
+		"gulp-rename": "^2.0.0",
+		"gulp-sass": "^5.1.0",
+		"gulp-sourcemaps": "^3.0.0",
+		"gulp-uglify": "^3.0.2",
+		"sass": "^1.53.0",
+		"vinyl-buffer": "^1.0.1",
+		"vinyl-source-stream": "^2.0.0",
+		"yargs": "^17.5.1"
+	}
 }
