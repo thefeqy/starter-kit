@@ -14,6 +14,7 @@ var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+var del = require('del');
 
 var sass = gulpSass(sassLib);
 var sync = browserSync.create();
@@ -23,15 +24,15 @@ var PRODUCTION = yargs(process.argv.slice(2)).argv.prod;
 var paths = {
 	html: {
 		src: 'src/**/*.html',
-		dest: 'dist/',
+		dest: 'assets/',
 	},
 	styles: {
-		src: 'src/assets/scss/*.scss',
-		dest: 'dist/assets/css',
+		src: 'src/scss/*.scss',
+		dest: 'assets/css',
 	},
 	scripts: {
-		dir: 'src/assets/js/',
-		dest: 'dist/assets/js',
+		dir: 'src/js/',
+		dest: 'assets/js',
 		files: [
 			{
 				src: 'index.js',
@@ -39,8 +40,8 @@ var paths = {
 		],
 	},
 	images: {
-		src: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg}',
-		dest: 'dist/assets/images',
+		src: 'src/images/**/*.{jpg,jpeg,png,gif,svg}',
+		dest: 'assets/images',
 	},
 };
 
@@ -72,7 +73,7 @@ gulp.task('scripts', function (done) {
 			.pipe(gulpIf(!PRODUCTION, sourceMaps.init({ loadMaps: true })))
 			.pipe(gulpIf(PRODUCTION, uglify()))
 			.pipe(gulpIf(!PRODUCTION, sourceMaps.write('./')))
-			.pipe(gulp.dest('dist/assets/js'))
+			.pipe(gulp.dest('assets/js'))
 			.pipe(sync.stream());
 	});
 
@@ -88,8 +89,20 @@ gulp.task('optimizeImages', function () {
 		.pipe(sync.stream());
 });
 
+// Delete build directory
+gulp.task('devClean', function() {
+	console.log(
+		'\n\t',
+		'Cleaning build folder for fresh start.\n'
+	);
+	return del(['./assets']);
+});
+
 // Build Script - "npm run build"
-gulp.task('default', gulp.series('buildStyles', 'scripts', 'optimizeImages'));
+gulp.task(
+	'default',
+	gulp.series('devClean', 'buildStyles', 'scripts', 'optimizeImages')
+);
 
 // Development Mode
 gulp.task(
@@ -101,9 +114,9 @@ gulp.task(
 			},
 		});
 
-		gulp.watch('src/assets/scss/**/*.scss', gulp.series('buildStyles'));
-		gulp.watch('src/assets/js/**/*.js', gulp.series('scripts'));
-		gulp.watch('src/assets/images/*', gulp.series('optimizeImages')).on(
+		gulp.watch('src/scss/**/*.scss', gulp.series('buildStyles'));
+		gulp.watch('src/js/**/*.js', gulp.series('scripts'));
+		gulp.watch('src/images/*', gulp.series('optimizeImages')).on(
 			'change',
 			sync.reload
 		);
