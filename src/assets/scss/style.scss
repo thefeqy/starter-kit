@@ -1,4 +1,22 @@
-@forward 'helpers';
-@forward 'global';
-@forward 'components';
-@forward 'templates';
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+// Vendors goes here
+
+@import 'base/animations';
+@import 'base/reset';
+@import 'base/typography';
+
+@import 'layout/footer';
+@import 'layout/grid';
+@import 'layout/header';
+@import 'layout/navigation';
+@import 'layout/sidebar';
+
+@import 'components/buttons';
+@import 'components/carousel';
+
+@import 'pages/home';
+
+@import 'themes/theme';
+@import 'themes/dark-theme';

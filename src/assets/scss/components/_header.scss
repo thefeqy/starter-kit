@@ -1,9 +1,0 @@
-@use '../helpers' as helpers;
-
-body {
-    background-color: helpers.$green;
-}
-
-a {
-    transition: all 320ms ease;
-}

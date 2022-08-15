@@ -53,8 +53,7 @@ gulp.task('buildStyles', function () {
 		.pipe(autoprefixer())
 		.pipe(gulpIf(PRODUCTION, cleanCss({ compatibility: 'ie8' })))
 		.pipe(gulpIf(!PRODUCTION, sourceMaps.write('./')))
-		.pipe(gulpIf(!PRODUCTION, gulp.dest(paths.styles.dest)))
-		.pipe(rename({ suffix: '.min' }))
+		.pipe(gulpIf(PRODUCTION, rename({ suffix: '.min' })))
 		.pipe(gulp.dest(paths.styles.dest))
 		.pipe(sync.stream());
 });
