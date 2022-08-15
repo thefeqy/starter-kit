@@ -70,9 +70,9 @@ gulp.task('scripts', function (done) {
 			.pipe(source(entry.src))
 			.pipe(rename({ extname: '.min.js', basename: 'main' }))
 			.pipe(buffer())
-			.pipe(sourceMaps.init({ loadMaps: true }))
-			.pipe(uglify())
-			.pipe(sourceMaps.write('./'))
+			.pipe(gulpIf(!PRODUCTION, sourceMaps.init({ loadMaps: true })))
+			.pipe(gulpIf(PRODUCTION, uglify()))
+			.pipe(gulpIf(!PRODUCTION, sourceMaps.write('./')))
 			.pipe(gulp.dest('dist/assets/js'))
 			.pipe(sync.stream());
 	});
@@ -82,20 +82,15 @@ gulp.task('scripts', function (done) {
 
 // Optimizing Images
 gulp.task('optimizeImages', function () {
-	return (
-		gulp
-			.src(paths.images.src)
-			.pipe(gulpIf(PRODUCTION, imagemin()))
-			.pipe(gulp.dest(paths.images.dest))
-			.pipe(sync.stream())
-	);
+	return gulp
+		.src(paths.images.src)
+		.pipe(gulpIf(PRODUCTION, imagemin()))
+		.pipe(gulp.dest(paths.images.dest))
+		.pipe(sync.stream());
 });
 
 // Build Script - "npm run build"
-gulp.task(
-	'default',
-	gulp.series('buildStyles', 'scripts', 'optimizeImages')
-);
+gulp.task('default', gulp.series('buildStyles', 'scripts', 'optimizeImages'));
 
 // Development Mode
 gulp.task(
