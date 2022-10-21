@@ -6,15 +6,11 @@ var gulpIf = require('gulp-if');
 var sourceMaps = require('gulp-sourcemaps');
 var cleanCss = require('gulp-clean-css');
 var imagemin = require('gulp-imagemin');
-var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync');
 var autoprefixer = require('gulp-autoprefixer');
 var rename = require('gulp-rename');
-var browserify = require('browserify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
 var del = require('del');
+var webpack = require('webpack-stream');
 
 var sass = gulpSass(sassLib);
 var sync = browserSync.create();
@@ -31,13 +27,8 @@ var paths = {
 		dest: 'assets/css',
 	},
 	scripts: {
-		dir: 'src/js/',
+		src: 'src/js/bundle.js',
 		dest: 'assets/js',
-		files: [
-			{
-				src: 'index.js',
-			},
-		],
 	},
 	images: {
 		src: 'src/images/**/*.{jpg,jpeg,png,gif,svg}',
@@ -60,24 +51,32 @@ gulp.task('buildStyles', function () {
 });
 
 // Concatenate and minify scripts
-gulp.task('scripts', function (done) {
-	paths.scripts.files.map(function (entry) {
-		return browserify({
-			entries: [paths.scripts.dir + entry.src],
-		})
-			.transform(babelify, { presets: ['@babel/preset-env'] })
-			.bundle()
-			.pipe(source(entry.src))
-			.pipe(rename({ extname: '.min.js', basename: 'main' }))
-			.pipe(buffer())
-			.pipe(gulpIf(!PRODUCTION, sourceMaps.init({ loadMaps: true })))
-			.pipe(gulpIf(PRODUCTION, uglify()))
-			.pipe(gulpIf(!PRODUCTION, sourceMaps.write('./')))
-			.pipe(gulp.dest('assets/js'))
-			.pipe(sync.stream());
-	});
-
-	done();
+gulp.task('scripts', function () {
+	return gulp
+		.src(paths.scripts.src)
+		.pipe(
+			webpack({
+				module: {
+					rules: [
+						{
+							test: /\.js$/,
+							use: {
+								loader: 'babel-loader',
+								options: {
+									presets: ['@babel/preset-env'],
+								},
+							},
+						},
+					],
+				},
+				output: {
+					filename: 'bundle.js',
+				},
+				devtool: !PRODUCTION ? 'inline-source-map' : false,
+				mode: PRODUCTION ? 'production' : 'development' //add this
+			})
+		)
+		.pipe(gulp.dest(paths.scripts.dest));
 });
 
 // Optimizing Images
@@ -90,11 +89,8 @@ gulp.task('optimizeImages', function () {
 });
 
 // Delete build directory
-gulp.task('devClean', function() {
-	console.log(
-		'\n\t',
-		'Cleaning build folder for fresh start.\n'
-	);
+gulp.task('devClean', function () {
+	console.log('\n\t', 'Cleaning build folder for fresh start.\n');
 	return del(['./assets']);
 });
 
